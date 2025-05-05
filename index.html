@@ -5,6 +5,19 @@
   <title>MultiLingua App</title>
 </head>
 <body>
-  <h1>Benvenuto in MultiLingua</h1>
+  <h1 id="welcome">Benvenuto in MultiLingua</h1>
+
+  <label for="lang">Scegli la lingua:</label>
+  <select id="lang" onchange="changeLanguage(this.value)">
+    <option value="it">Italiano</option>
+    <option value="en">English</option>
+    <option value="de">Deutsch</option>
+    <option value="pt">Português</option>
+    <option value="fr">Français</option>
+    <option value="es">Español</option>
+  </select>
+
+  <script src="app-multilingue.js"></script>
 </body>
 </html>
+
