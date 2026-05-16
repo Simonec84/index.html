@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Cognitive OS V17</title>
+
+<link rel="manifest" href="manifest.json"/>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:#020617;
+    color:white;
+    padding:15px;
+}
+
+h1{
+    text-align:center;
+}
+
+textarea{
+    width:100%;
+    height:120px;
+    background:#0b1220;
+    color:white;
+    border:1px solid #334155;
+    padding:10px;
+    border-radius:8px;
+    font-size:16px;
+}
+
+button{
+    padding:14px;
+    background:#38bdf8;
+    border:none;
+    width:100%;
+    margin-top:10px;
+    font-weight:bold;
+    border-radius:8px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+#out{
+    margin-top:10px;
+    background:#0f172a;
+    padding:12px;
+    border-left:4px solid #38bdf8;
+    white-space:pre-wrap;
+    min-height:80px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🧠 Cognitive OS V17</h1>
+
+<textarea id="input" placeholder="Scrivi qui (es: sono stressato e devo studiare ma non riesco)"></textarea>
+
+<button onclick="run()">⚙️ Analizza</button>
+
+<div id="out">Scrivi qualcosa e premi Analizza</div>
+
+<script>
+function analyze(text){
+
+    let t = text.toLowerCase();
+
+    // rilevazione più naturale (non solo parole identiche)
+    let stressPatterns = [
+        "stress","stressato","ansia","ansioso",
+        "non riesco","non ce la faccio","bloccato",
+        "troppo","caos","pressione","confuso"
+    ];
+
+    let studyPatterns = [
+        "studio","studiare","esame","compiti","scuola"
+    ];
+
+    let futurePatterns = [
+        "futuro","obiettivo","migliorare","crescere","lavoro"
+    ];
+
+    let stress = 0;
+    let study = 0;
+    let future = 0;
+
+    stressPatterns.forEach(p=>{
+        if(t.includes(p)) stress++;
+    });
+
+    studyPatterns.forEach(p=>{
+        if(t.includes(p)) study++;
+    });
+
+    futurePatterns.forEach(p=>{
+        if(t.includes(p)) future++;
+    });
+
+    let action = "";
+
+    // LOGICA PIÙ UMANA
+
+    if(stress >= 2){
+        action = "⚠️ Sei sovraccarico mentale.\nRiduci tutto a UNA sola cosa piccola da fare ora.";
+    }
+    else if(study >= 1 && stress >= 1){
+        action = "📚 Hai difficoltà a studiare.\nInizia SOLO 10 minuti senza pensare al risultato.";
+    }
+    else if(future === 0){
+        action = "🎯 Nessun obiettivo chiaro rilevato.\nDefinisci una direzione semplice per oggi.";
+    }
+    else if(t.includes("non riesco")){
+        action = "🧠 Blocchi rilevati.\nNon forzarti: inizia con un passo minuscolo.";
+    }
+    else {
+        action = "✔️ Sei in controllo.\nConcentrati su una priorità alla volta.";
+    }
+
+    return {
+        stress,
+        study,
+        future,
+        action
+    };
+}
+
+function run(){
+    let input = document.getElementById("input").value;
+
+    if(!input){
+        document.getElementById("out").innerText = "Scrivi qualcosa prima di analizzare.";
+        return;
+    }
+
+    let result = analyze(input);
+
+    document.getElementById("out").innerText =
+`🧠 ANALISI COMPLETA
+
+Stress: ${result.stress}
+Studio: ${result.study}
+Futuro: ${result.future}
+
+⚡ AZIONE CONSIGLIATA
+${result.action}`;
+}
+</script>
+
+<script>
+if("serviceWorker" in navigator){
+    navigator.serviceWorker.register("sw.js");
+}
+</script>
+
+</body>
+</html>
