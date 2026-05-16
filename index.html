@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Cognitive OS V17</title>
+
+<link rel="manifest" href="manifest.json"/>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:#020617;
+    color:white;
+    padding:15px;
+}
+
+h1{text-align:center;}
+
+textarea{
+    width:100%;
+    height:120px;
+    background:#0b1220;
+    color:white;
+    border:1px solid #334155;
+    padding:10px;
+    border-radius:8px;
+}
+
+button{
+    padding:12px;
+    background:#38bdf8;
+    border:none;
+    width:100%;
+    margin-top:10px;
+    font-weight:bold;
+    border-radius:8px;
+}
+
+#out{
+    margin-top:10px;
+    background:#0f172a;
+    padding:10px;
+    border-left:4px solid #38bdf8;
+    white-space:pre-wrap;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🧠 Cognitive OS V17</h1>
+
+<textarea id="input" placeholder="Scrivi pensieri, problemi, idee..."></textarea>
+
+<button onclick="run()">⚙️ Analizza</button>
+
+<div id="out">Idle...</div>
+
+<script>
+function analyze(text){
+
+    let words = text.toLowerCase().split(/\s+/);
+
+    let stress = words.filter(w =>
+        ["stress","problema","urgente","caos","ritardo"].includes(w)
+    ).length;
+
+    let future = words.filter(w =>
+        ["futuro","obiettivo","crescita","lavoro","salute"].includes(w)
+    ).length;
+
+    let action = "";
+
+    if(stress > 2){
+        action = "Riduci carico mentale → elimina task non essenziali";
+    } else if(future === 0){
+        action = "Definisci un obiettivo a lungo termine";
+    } else {
+        action = "Concentrati su UNA sola priorità oggi";
+    }
+
+    return {stress, future, action};
+}
+
+function run(){
+    let input = document.getElementById("input").value;
+    let result = analyze(input);
+
+    document.getElementById("out").innerText =
+`🧠 ANALISI
+Stress: ${result.stress}
+Futuro: ${result.future}
+
+⚡ AZIONE
+${result.action}`;
+}
+</script>
+
+<script>
+if("serviceWorker" in navigator){
+    navigator.serviceWorker.register("sw.js");
+}
+</script>
+
+</body>
+</html>
